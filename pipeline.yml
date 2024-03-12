@@ -1,0 +1,70 @@
+trigger:
+- master
+
+pool: ''
+
+steps:
+
+- task: FortifySCA@7
+  inputs:
+    applicationType: 'other'
+    fortifyBuildId: 'php'
+    fortifyScanType: 'LocalScan'
+    runFortifyUpload: true
+    fortifyServerName: 'ssc test'
+    fortifyApplicationName: 'applicationName'
+    fortifyApplicationVersion: '1'
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $fortify_ssc_api_url = "$(url)"
+      $token = "FortifyToken $(FortiToken)"
+      
+      $headers = @{
+          "Authorization" = $token
+          "Content-Type" = "application/json"
+          "Accept" = "application/json"
+      }
+      
+      try {
+          # Api request get
+          $response = Invoke-WebRequest -Uri $fortify_ssc_api_url -Method Get -Headers $headers
+      
+          # Reponse status
+          if ($response.StatusCode -eq 200) {
+              # JSON data parse
+              $project_versions_data = $response.Content | ConvertFrom-Json
+      
+              # Json data write
+              $file_path = "$(Build.ArtifactStagingDirectory)\test.json"  # Write to pipeline's workspace directory
+              $project_versions_data | ConvertTo-Json -Depth 4 | Out-File -FilePath $file_path
+              $jsonData = Get-Content $file_path
+              $priorityLines = $jsonData | Where-Object { $_ -like "*friority*" }
+              $txtFile = "$(Build.ArtifactStagingDirectory)\output.txt"  # Write to pipeline's workspace directory
+              $priorityLines | Out-File -FilePath $txtFile
+                    
+      
+              Write-Host "Project vulnerability info export succes."
+          } else {
+              throw "HTTP Error: $($response.StatusCode) $($response.StatusDescription)"
+          }
+      } catch [System.Net.WebException] {
+          Write-Host "HTTP Error: $($_.Exception.Message)"
+      } catch {
+          Write-Host "An error occurred: $($_.Exception.Message)"
+      }
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $content = Get-Content -Path "$(Build.ArtifactStagingDirectory)\output.txt"
+      $x = 2
+
+      $lines = $content | Where-Object { $_ -like "*friority*" }
+
+      if ($lines.Length -ge $x) {
+          Write-Host "Pipeline Broken. Error Status: Exit Code 1"
+          Exit 1
+      }
