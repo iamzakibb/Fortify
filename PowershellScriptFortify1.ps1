@@ -9,7 +9,7 @@ $applicationsEndpoint = "$sscUrl/api/v1/applications"
 
 # Set up headers with the Personal Access Token
 $headers = @{
-    "Authorization" = "Token $patToken"
+    "Authorization" = "CIToken $patToken"
     "Accept" = "application/json"
 }
 
@@ -34,4 +34,16 @@ try {
     }
 } catch {
     Write-Host "An error occurred: $($_.Exception.Message)"
+    if ($_.Exception.Response) {
+        $errorResponse = $_.Exception.Response.GetResponseStream()
+        $reader = New-Object System.IO.StreamReader($errorResponse)
+        $reader.BaseStream.Position = 0
+        $reader.DiscardBufferedData()
+        $responseBody = $reader.ReadToEnd()
+        Write-Host "Response Body: $responseBody"
+        Write-Host "Response Headers:"
+        $_.Exception.Response.Headers | ForEach-Object {
+            Write-Host "$($_.Key): $($_.Value)"
+        }
+    }
 }
