@@ -1,7 +1,7 @@
 # Step 1: Define variables
 $fortifySscUrl = "https://fortify.com/ssc"
 $accessToken = "your_access_token"
-$applicationName = "org.frb.atl.adsfortify_atl-ads-cia"
+$applicationName = "cia"
 
 # Step 2: Retrieve CIA Application ID from Fortify SSC
 function GetCIAApplicationId {
@@ -21,7 +21,7 @@ function GetCIAApplicationId {
 
         if ($response) {
             $applicationsData = $response.data
-            $ciaApplication = $applicationsData | Where-Object { $_.name -eq "org.frb.atl.adsfortify_atl-ads-cia" }
+            $ciaApplication = $applicationsData | Where-Object { $_.name -contains "cia" }
             if ($ciaApplication) {
                 return $ciaApplication.id
             } else {
