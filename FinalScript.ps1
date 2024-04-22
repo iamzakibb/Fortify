@@ -21,7 +21,7 @@ function GetCIAApplicationId {
 
         if ($response) {
             $applicationsData = $response.data
-            $ciaApplication = $applicationsData | Where-Object { $_.name -eq "CIA" }
+            $ciaApplication = $applicationsData | Where-Object { $_.name -eq "org.frb.atl.adsfortify_atl-ads-cia" }
             if ($ciaApplication) {
                 return $ciaApplication.id
             } else {
