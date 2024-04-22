@@ -1,7 +1,7 @@
 # Step 1: Define variables
 $fortifySscUrl = "https://fortify.com/ssc"
 $accessToken = "your_access_token"
-$applicationName = "Contingency Info Anywhere (CIA)"
+$applicationName = "org.frb.atl.adsfortify_atl-ads-cia"
 
 # Step 2: Retrieve CIA Application ID from Fortify SSC
 function GetCIAApplicationId {
