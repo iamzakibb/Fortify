@@ -42,7 +42,11 @@ try {
             }
         } | Where-Object { $_.name.contains($applicationName) } | Sort-Object -Property id -Descending | Select-Object -First 1
         #printing the name of latest version of the specified application
-        Write-Host "Latest Application: $($LatestApplication.Name) Project ID: $($LatestApplication.id)"
+        foreach ($name in $LatestApplication) {
+            Write-Host "Version ID: $($name.Id) Version Name: $($name.Name)"
+        }
+        
+        # Write-Host "Latest Application: $($LatestApplication.Name) Project ID: $($LatestApplication.id)"
         
 
         # Print the list of application names
