@@ -28,13 +28,15 @@ try {
         Write-Host "Response Data:"
         $applicationsData | Format-Table
         
-        # Extract latest application
-        # $LatestApplication = $applicationsData | ForEach-Object {
-        #     [PSCustomObject]@{
-        #         Id   = $_.id
-        #         Name = $_.name
-        #     }
-        # } | Where-Object { $_.Name -like "*$applicationName*" } | Sort-Object -Property Id -Descending | Select-Object -First 1
+        $LatestApplication = $applicationsData | ForEach-Object {
+            [PSCustomObject]@{
+                Id   = $_.id
+                Name = $_.name
+            }
+        } | Where-Object { 
+            $_.Name -like "*$applicationName*" -or $_.project.name -like "*$applicationName*"
+        } | Sort-Object -Property Id -Descending | Select-Object -First 1
+        
         $LatestApplication = $applicationsData | Where-Object { $_.name.contains($applicationName) }
         
         # Print the name of the latest version of the specified application
