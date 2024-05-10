@@ -29,22 +29,18 @@ try {
         $applicationsData | Format-Table
         
         # Extract latest application
-        $LatestApplication = $applicationsData | ForEach-Object {
-            [PSCustomObject]@{
-                Id   = $_.id
-                Name = $_.name
-            }
-        } | Where-Object { $_.name.contains($applicationName) } | Sort-Object -Property Id -Descending | Select-Object -First 1
-        
-        # Debugging: Output the latest application
-        Write-Host "Latest Application:"
-        $LatestApplication | Format-Table
+        # $LatestApplication = $applicationsData | ForEach-Object {
+        #     [PSCustomObject]@{
+        #         Id   = $_.id
+        #         Name = $_.name
+        #     }
+        # } | Where-Object { $_.Name -like "*$applicationName*" } | Sort-Object -Property Id -Descending | Select-Object -First 1
+        $LatestApplication = $applicationsData | Where-Object { $_.name.contains($applicationName) }
         
         # Print the name of the latest version of the specified application
         if ($LatestApplication) {
             Write-Host "Version ID: $($LatestApplication.Id) Version Name: $($LatestApplication.Name)"
-        }
-        else {
+        } else {
             Write-Host "No application found with name '$applicationName'."
         }
     }
