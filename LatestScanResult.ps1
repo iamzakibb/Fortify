@@ -1,4 +1,3 @@
-
 # Set up your Fortify SSC URL
 $sscUrl = "https://fortify.frb.org"
 $applicationName = "cia"
@@ -25,43 +24,34 @@ try {
     if ($response) {
         $applicationsData = $response.data
         
-        # Extract application names
-
-        # $applicationNames = $applicationsData | ForEach-Object {
-        #     [PSCustomObject]@{
-        #         Id          = $_.id
-        #         Name        = $_.name
-        #         ProjectId   = $_.project.id
-        #         ProjectName = $_.project.name
-        #     }
-        # }
+        # Debugging: Output the response data
+        Write-Host "Response Data:"
+        $applicationsData | Format-Table
+        
+        # Extract latest application
         $LatestApplication = $applicationsData | ForEach-Object {
             [PSCustomObject]@{
                 Id   = $_.id
                 Name = $_.name
             }
-        } | Where-Object { $_.name.contains($applicationName) } | Sort-Object -Property id -Descending | Select-Object -First 1
-        #printing the name of latest version of the specified application
-        foreach ($name in $LatestApplication) {
-            Write-Host "Version ID: $($name.Id) Version Name: $($name.Name)"
+        } | Where-Object { $_.name.contains($applicationName) } | Sort-Object -Property Id -Descending | Select-Object -First 1
+        
+        # Debugging: Output the latest application
+        Write-Host "Latest Application:"
+        $LatestApplication | Format-Table
+        
+        # Print the name of the latest version of the specified application
+        if ($LatestApplication) {
+            Write-Host "Version ID: $($LatestApplication.Id) Version Name: $($LatestApplication.Name)"
         }
-        
-        # Write-Host "Latest Application: $($LatestApplication.Name) Project ID: $($LatestApplication.id)"
-        
-
-        # Print the list of application names
-        # Write-Host "List of applications:"
-        # foreach ($name in $applicationNames) {
-        #     Write-Host "Version ID: $($name.Id) Version Name: $($name.Name) Project ID: $($name.ProjectId) Project Name: $($name.ProjectName)"
-        # }
+        else {
+            Write-Host "No application found with name '$applicationName'."
+        }
     }
     else {
         Write-Host "Failed to retrieve applications. Status code: $($response.StatusCode)"
         Write-Host $response
     }
-
-   
-
 }
 catch {
     Write-Host "An error occurred: $($_.Exception.Message)"
