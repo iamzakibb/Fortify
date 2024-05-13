@@ -38,7 +38,10 @@ try {
         # } | Sort-Object -Property Id -Descending | Select-Object -First 1
         
         # $LatestApplication = $applicationsData | Where-Object { $_.name.contains($applicationName) }
-        $LatestApplication = $application | Where-Object { $_.project.name -like "*$applicationName*" -or $_.project -like "*$applicationName*" } | Sort-Object -Property Id -Descending | Select-Object -First 1
+        # $LatestApplication = $application | Where-Object { $_.project.name -like "*$applicationName*" -or $_.project -like "*$applicationName*" } | Sort-Object -Property Id -Descending | Select-Object -First 1
+        # ----------
+        $LatestApplication = $applicationsData |  Where-Object { $_.project.name -like "*$applicationName*" -or $_.project -like "*$applicationName*" } | Sort-Object -Property Id -Descending | Select-Object -First 1
+
 
         # Print the name of the latest version of the specified application
         if ($LatestApplication) {
