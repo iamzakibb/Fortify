@@ -45,7 +45,7 @@ try {
 
         # Print the name of the latest version of the specified application
         if ($LatestApplication) {
-            Write-Host $LatestApplication
+            Write-Host "Application id, version and project name: $($LatestApplication.id) $($LatestApplication.name) $($LatestApplication.project.name)"
         }
         else {
             Write-Host "No application found with name '$applicationName'."
