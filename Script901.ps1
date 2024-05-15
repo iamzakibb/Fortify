@@ -3,6 +3,12 @@
 $fortifySscUrl = "https://fortify.frb.org"
 $accessToken = "MzU2NzhhY2MtNzNmNC00MWRhLTgwZjAtMDY4MTQxMTUwYzhi"
 $applicationName = "cia"
+$projectName = "Contingency Info Anywhere (CIA)"
+$riskLevel = "moderate"
+$riskTolerance = 2
+$categorizationName = "SAST"
+$buildArtifactRepoName = "AZDO, Repo, Files, (Project Name)"
+
 
 # Step 2: Retrieve Application ID from Fortify SSC
 
@@ -13,9 +19,13 @@ function GetApplicationId {
         [string] $applicationName
     )
 
-    $applicationsEndpoint = "$sscUrl/api/v1/projectVersions?start=0&limit=200&fulltextsearch=false&includeInactive=false&myAssignedIssues-false&onlyIfHasIssues-false"
+    $applicationsEndpoint = "$fortifySscUrl/api/v1/projectVersions?start=0&limit=200&fulltextsearch=false&includeInactive=false&myAssignedIssues-false&onlyIfHasIssues-false"
 
     try {
+        $headers = @{
+            "Authorization" = "FortifyToken $accessToken"
+            "Accept"        = "application/json"
+        }
         # Send request to retrieve applications
         $response = Invoke-RestMethod -Uri $applicationsEndpoint -Headers $headers -Method Get
         
@@ -139,11 +149,11 @@ if ($ciaApplicationId) {
 
 
     $systemCategorization = [PSCustomObject]@{
-        ProjectName       = "Contingency Info Anywhere (CIA)"
-        RiskLevel         = "moderate"
-        RiskTolerance     = 2
-        Categorization    = "SAST"
-        BuildArtifactRepo = "AZDO, Repo, Files, (Project Name)"
+        ProjectName       = $projectName
+        RiskLevel         = $riskLevel
+        RiskTolerance     = $riskTolerance
+        Categorization    = $categorizationName
+        BuildArtifactRepo = $buildArtifactRepoName
     }
 }
 
