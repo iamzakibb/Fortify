@@ -4,7 +4,7 @@ $accessToken = "$(accessToken)"
 $applicationName = "$(applicationName)"
 $projectName = "$(projectName)"
 $riskLevel = "$(riskLevel)"
-$riskTolerance = [int]$(riskTolerance)
+$riskTolerance = $(riskTolerance)
 $categorizationName = "$(categorizationName)"
 $buildArtifactRepoName = "$(buildArtifactRepoName)"
 
