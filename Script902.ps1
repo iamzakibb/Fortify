@@ -117,8 +117,7 @@ function ComparewithSystemCategorization {
         if ($systemCategorization.RiskTolerance -lt $severity) {
             $highRisk = $true
         }
-        Write-Host "Latest Scan Result Issue Name: $issueName"
-        Write-Host "Latest Scan Result Severity: $severity"
+       Write-Host "Latest Scan Result Issue Name: $issueName  ->  Severity: $severity"
     }
 
     return $highRisk
