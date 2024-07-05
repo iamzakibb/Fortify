@@ -7,6 +7,7 @@ $riskLevel = "$(riskLevel)"
 $riskTolerance = $(riskTolerance)
 $categorizationName = "$(categorizationName)"
 $buildArtifactRepoName = "$(buildArtifactRepoName)"
+$applicationId = ""
 
 # Step 2: Retrieve Application ID from Fortify SSC
 function GetApplicationId {
